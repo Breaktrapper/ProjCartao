@@ -67,6 +67,14 @@ public class Apiexample {
             //test.TestChangeAddress();
             // Don't check the integrity of the ID, address and photo (!)
             pteid.SetSODChecking(false);
+            
+            //fazer num outro programa
+            byte[] ReadSOD = pteid.ReadSOD();
+            //gravar para um ficheiro - binario
+            //ver num online ans1 editor http://asn1-playground.oss.com/
+            //ver estrutura 
+            //java parsers https://www.openmuc.org/asn1/user-guide/
+            //https://stackoverflow.com/questions/10190795/parsing-asn-1-binary-data-with-java
 
             int cardtype = pteid.GetCardType();
             switch (cardtype) {
@@ -84,6 +92,7 @@ public class Apiexample {
             }
 
             System.out.println("//--- Informações pessoais e de cartão ---//\n");
+            
             PTEID_ID idData = pteid.GetID();
             if (idData != null) {
                 
@@ -101,6 +110,8 @@ public class Apiexample {
                     outFile.write(pic.picture);
                     outFile.close();
                     System.out.println("Foto criada com sucesso.");
+                    //ver foto com jai-imageio-jpeg2000
+                    //http://www.irfanview.com/
                 }
                 catch(FileNotFoundException excep)
                 {
@@ -112,7 +123,24 @@ public class Apiexample {
             for(int i = 0; i< certs.length;i++)
             {
                 System.out.println("Certificado:"+certs[i].toString());
+                
+                //verificar os certifcado ?? (possivelmente cadeia, etc..)
+                
+                
+                //extrair ocsp -- output
+                //extrar crl -- output
+                
+                //gravar os certifcados para o ficheiro
+                //ver os formatos ..
+                //ver a cadeia de certificados
+                
+                //ver se consegues inserir os certs num java keystore e verificar os certifcados e cadeia de certificação.
+                
             }
+            
+            //MAIS TARDE..
+            //obter hash do ID, pic, etc.. 
+            //comparar com a hash do SOD
 
 //
 //       // Write personal data
