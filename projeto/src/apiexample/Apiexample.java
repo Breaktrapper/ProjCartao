@@ -5,17 +5,26 @@
  */
 package apiexample;
 
-import pteidlib.PTEID_Certif;
-import java.io.*;
-import pt.gov.cartaodecidadao.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import sun.misc.BASE64Encoder;
+
+import pt.gov.cartaodecidadao.PTEID_EIDCard;
 import pteidlib.PteidException;
 import pteidlib.pteid;
+import pteidlib.PTEID_PIC;
 
 /**
  *
  * @author João Saraiva
  */
 public class Apiexample {
+
+    private PTEID_EIDCard card;
 
     static {
         try {
@@ -39,43 +48,68 @@ public class Apiexample {
 
             System.out.println("//--- Leitura do ficheiro SOD ---//\n");
             byte[] ReadSOD = pteid.ReadSOD();
-            
-            saveInfo.saveSOD(ReadSOD, "file.bin"); //gravar para o ficheiro binário
-            //saveInfo.saveSOD(ReadSOD, "file.ber"); //Para testar no online editor -> online ans1 editor http://asn1-playground.oss.com/
-            //ver estrutura 
-            //java parsers https://www.openmuc.org/asn1/user-guide/
-            //https://stackoverflow.com/questions/10190795/parsing-asn-1-binary-data-with-java
 
+            helperFile.saveSOD(ReadSOD, "file.bin");
+
+            /*
             System.out.println("//--- Certificados digitais ---//\n");
             PTEID_Certif[] certs = pteid.GetCertificates();
-            saveInfo.saveCerts(certs, "certs.pem");
-
-            //verificar os certifcado ?? (possivelmente cadeia, etc..)
-            //extrair ocsp -- output
+            System.out.println("Encontrados " + certs.length + "certificados");
+            for (int i = 0; i < certs.length; i++) {
+                X509Certificate x509 = X509Certificate.getInstance(certs[i].certif);
+                System.out.println("\nCertificado " + i + ":"
+                        + "\nDN do Certificado: " + x509.getSubjectDN() + "\nDN do Emissor"
+                        + x509.getIssuerDN() + "\nValido até: " + x509.getNotAfter());
+                saveInfo.saveCerts(x509);
+            }
+             */
+            //TO DO LIST...
+            //--------------- Parte 1 --------------------// DONE
+            
+            //gravar para o ficheiro binário
+            //testar no online editor ans1 editor http://asn1-playground.oss.com/
+            //- ver estrutura 
+            //- java parsers https://www.openmuc.org/asn1/user-guide/
+            //https://stackoverflow.com/questions/10190795/parsing-asn-1-binary-data-with-java
+            
+            //--------------- Parte 2 --------------------// HALF DONE
+            //verificar os certificados1 (possivelmente cadeia, etc..)
+            //extrair ocsp -- output    (
             //extrar crl -- output
             //gravar os certifcados para o ficheiro
             //ver os formatos ..
             //ver a cadeia de certificados
             //ver se consegues inserir os certs num java keystore e verificar os certifcados e cadeia de certificação.
             
-            //MAIS TARDE..
+            //--------------- Parte 3 --------------------// DONE
             //obter hash do ID, pic, etc.. 
             //comparar com a hash do SOD
-            /*
-            for (int i = 0; i < certs.length; i++) {
-                System.out.println(certs[i].certifLabel); //cadeia??
+            PTEID_PIC picData = pteid.GetPic();
+            if (null != picData) {
+                try {
+                    String photo = "pic.jp2";
+                    FileOutputStream oFile = new FileOutputStream(photo);
+                    oFile.write(picData.picture);
+                    oFile.close();
+                    System.out.println("Created " + photo);
+                } catch (FileNotFoundException excep) {
+                    System.out.println(excep.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            PTEID_Certificates certs2 = pt.gov.cartaodecidadao.PTEID_Certificates;
-            PTEID_Certificate root = certs2.getRoot(); //obtem raiz
-            PTEID_Certificate ca = certs2.getCA(); //obtem CA
+            boolean bool = helperFile.checkHashes("file.bin", "pic.jp2");
+            if (bool == true) {
+                System.out.println("Os ficheiros são iguais!\n");
 
-            System.out.println("Root: " + root.toString());
-            System.out.println("Ca:" + root.toString());
-            */
-            PTEID_Certificate certs4 = pt.gov.cartaodecidadao.PTEID_Certificate;
-            String chain = certs4.getOwnerName();
-            PTEID_CertifStatus status = certs4.getStatus();
-            System.out.println("Status: "+status.toString());
+            } else {
+                System.out.println("Os ficheiros são diferentes!\n");
+            }
+
+            //--------------- Duvidas...
+            //1ª- O que significa CVC?
+            //2ª- Qual a diferença entre PTEID_Certif[] GetCertificates() do pteid.java e PTEID_Certificate getCert do PTEID_Certificates.java??
+            //3ª- Na função toJavaCertificate() e alterar o tipo do objeto para PTEID_Certif, não existe o metodo getCertData() logo não funciona..
 //
 //       pteid.Exit(pteid.PTEID_EXIT_LEAVE_CARD);
         } catch (PteidException ex) {
