@@ -39,8 +39,9 @@ public class Apiexample {
 
             System.out.println("//--- Leitura do ficheiro SOD ---//\n");
             byte[] ReadSOD = pteid.ReadSOD();
+            
             saveInfo.saveSOD(ReadSOD, "file.bin"); //gravar para o ficheiro binário
-            //ver num online ans1 editor http://asn1-playground.oss.com/
+            //saveInfo.saveSOD(ReadSOD, "file.ber"); //Para testar no online editor -> online ans1 editor http://asn1-playground.oss.com/
             //ver estrutura 
             //java parsers https://www.openmuc.org/asn1/user-guide/
             //https://stackoverflow.com/questions/10190795/parsing-asn-1-binary-data-with-java
