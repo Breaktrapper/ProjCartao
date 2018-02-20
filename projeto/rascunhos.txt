@@ -1,0 +1,59 @@
+
+      
+    public void PrintIDData(PTEID_ID idData) {
+        System.out.println("Informações do cartão...\n");
+        System.out.println("Número cartão: \n" + idData.cardNumber);
+        System.out.println("PAN : \n" + idData.cardNumberPAN);
+        
+        System.out.println("\nInformações pessoais...\n");
+        System.out.println("Nome:\n" + idData.name);
+        System.out.println("Sexo:\n" + idData.sex);
+        System.out.println("Altura:\n" + idData.height);
+        System.out.println("Data de nascimento:\n" + idData.birthDate);
+        System.out.println("País:\n" + idData.country);
+        System.out.println("Nacionalidade:\n" + idData.nationality);
+        System.out.println("Primeiro nome:\n" + idData.firstname);
+        System.out.println("Primeiro nome do pai:\n" + idData.firstnameFather);
+        System.out.println("Primeiro nome da mãe:\n" + idData.firstnameMother);
+        System.out.println("Nome da mãe:\n" + idData.nameMother);
+        System.out.println("Número BI:\n" + idData.numBI);
+        System.out.println("NIF:\n" + idData.numNIF);
+        System.out.println("Número SNS:\n" + idData.numSNS);
+        System.out.println("Número SS:\n" + idData.numSS);
+    }
+
+    public void PrintCertData(PTEID_Certif certData) {
+        System.out.println("Certificados...\n");
+        System.out.println(""+certData.certifLabel);
+
+        
+
+    }
+
+ System.out.println("//--- Informações pessoais e de cartão ---//\n");
+            
+            PTEID_ID idData = pteid.GetID();
+            if (idData != null) {
+                
+                teste.PrintIDData(idData);
+
+            }
+            System.out.println("//--- Fotografia ---//\n");
+            PTEID_PIC pic = pteid.GetPic();
+            if(pic != null)
+            {
+                try
+                {
+                    String foto = "foto.jp2";
+                    FileOutputStream outFile = new FileOutputStream(foto);
+                    outFile.write(pic.picture);
+                    outFile.close();
+                    System.out.println("Foto criada com sucesso.");
+                    //ver foto com jai-imageio-jpeg2000
+                    //http://www.irfanview.com/
+                }
+                catch(FileNotFoundException excep)
+                {
+                    System.out.println(excep.getMessage());
+                }
+            }
