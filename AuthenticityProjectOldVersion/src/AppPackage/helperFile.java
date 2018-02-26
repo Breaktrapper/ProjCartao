@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package apiexample;
+package AppPackage;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -60,7 +60,6 @@ import sun.misc.BASE64Encoder;
  */
 public class helperFile {
 
-    private PTEID_EIDCard card;
 
     public static void saveSOD(byte[] bytes, String file) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -75,17 +74,17 @@ public class helperFile {
 
         PKCS7 p7 = new PKCS7(newSod);
 
-        X509Certificate[] certificates = p7.getCertificates();
+        X509Certificate[] certificates = p7.getCertificates(); //Certificados do ficheiro SOD
 
         AlgorithmId[] digestAlgorithmIds = p7.getDigestAlgorithmIds();
 
-        System.out.println("P7 get Version: " + p7.getVersion().toString());
+        //System.out.println("P7 get Version: " + p7.getVersion().toString());
         System.out.println("Dump Object\n" + p7.toString());
         //using bouncycastle to dump the object
         ASN1InputStream bIn = new ASN1InputStream(new ByteArrayInputStream(newSod));
         ASN1Object obj2 = (ASN1Object) bIn.readObject();
         System.out.println(ASN1Dump.dumpAsString(obj2, true));
-        /*System.out.println("certificates (devia ser 1)" + certificates.length);
+        System.out.println("certificates (devia ser 1)" + certificates.length);
         System.out.println("certificates[0] subject DN " + certificates[0].getSubjectDN());
 
         int certLength;
@@ -99,26 +98,8 @@ public class helperFile {
         } catch (java.security.cert.CertificateEncodingException ex) {
             Logger.getLogger(helperFile.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */
+        
 
-    }
-       
-
-    
-    public X509Certificate[] getCardCertificates() throws PTEID_Exception, CertificateException {
-
-        PTEID_Certificates certs = card.getCertificates();
-        X509Certificate userCert = toJavaCertificate(certs.getCertFromCard(0));
-        X509Certificate subCACert = toJavaCertificate(certs.getCertFromCard(3));
-        return new X509Certificate[]{userCert, subCACert};
-    }
-
-    private X509Certificate toJavaCertificate(PTEID_Certificate certificate) throws CertificateException, PTEID_Exception {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        InputStream is = new ByteArrayInputStream(certificate.getCertData().GetBytes());
-        X509Certificate javaCert = (X509Certificate) cf.generateCertificate(is);
-
-        return javaCert;
     }
     
     public static void saveCerts(javax.security.cert.X509Certificate x509) throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, CertificateEncodingException {
