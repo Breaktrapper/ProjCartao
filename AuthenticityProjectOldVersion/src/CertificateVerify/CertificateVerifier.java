@@ -16,7 +16,6 @@ import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.cert.CertPathBuilder;
-import java.security.cert.CertPathBuilderException;
 import java.security.cert.CertStore;
 import java.security.cert.CertificateException;
 import java.security.cert.CollectionCertStoreParameters;

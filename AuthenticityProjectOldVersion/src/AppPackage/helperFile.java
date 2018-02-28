@@ -60,7 +60,6 @@ import sun.misc.BASE64Encoder;
  */
 public class helperFile {
 
-
     public static void saveSOD(byte[] bytes, String file) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
 
@@ -92,28 +91,31 @@ public class helperFile {
             certLength = certificates[0].getEncoded().length;
             System.out.println("certificates[0] len " + certLength);
 
-        for (int i = 0; i < digestAlgorithmIds.length; i++) {
-            System.out.println("Digest Algorithms ids: " + digestAlgorithmIds[i].getName());
-        }
+            for (int i = 0; i < digestAlgorithmIds.length; i++) {
+                System.out.println("Digest Algorithms ids: " + digestAlgorithmIds[i].getName());
+            }
         } catch (java.security.cert.CertificateEncodingException ex) {
             Logger.getLogger(helperFile.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
 
     }
-    
+
     public static void saveCerts(javax.security.cert.X509Certificate x509) throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, CertificateEncodingException {
-        FileOutputStream os = new FileOutputStream("x509certs.pem");
+        FileOutputStream os = new FileOutputStream("testCert.cer");
         os.write("-----BEGIN CERTIFICATE-----\n".getBytes("US-ASCII"));
+        java.security.cert.X509Certificate x509toJava = ConverterFile.convertToJava(x509); //Converter de javax para java x509Certificate
         os.write(org.bouncycastle.util.encoders.Base64.encode(x509.getEncoded()));
         //os.write(Base64.encodeBase64(x509.getEncoded(), true));
         os.write("-----END CERTIFICATE-----\n".getBytes("US-ASCII"));
         os.close();
 
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        trustStore.load(null);
 
-        InputStream bis = new FileInputStream("x509certs.pem");
+        char[] password = "123456".toCharArray();
+
+        FileInputStream store = new FileInputStream("keystore.jks");
+        trustStore.load(store, password);
+        FileInputStream bis = new FileInputStream("testCert.cer");
 
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
@@ -122,6 +124,8 @@ public class helperFile {
             trustStore.setCertificateEntry("fiddler" + bis.available(), cert);
 
         }
+
+        //trustStore.load(null);
     }
 
     public static boolean checkHashes(String file1, String file2) throws NoSuchAlgorithmException, FileNotFoundException, IOException {

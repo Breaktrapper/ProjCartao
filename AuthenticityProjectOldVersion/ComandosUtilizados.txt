@@ -1,0 +1,1 @@
+keytool -importcert -file testCert.cer -keystore keystore.jks -alias "Alias" -> adiciona o "testCert.cer" à java keystore
