@@ -1,1 +1,5 @@
 keytool -importcert -file testCert.cer -keystore keystore.jks -alias "Alias" -> adiciona o "testCert.cer" à java keystore
+
+keytool -list -v -keystore keystore.jks -> lista os certificados da keystore
+
+keytool -genkeypair -storepass 123456 -storetype pkcs12 -alias test -validity 365 -v -keyalg RSA -keystore keystore.p12 -> gera certificado auto assinado

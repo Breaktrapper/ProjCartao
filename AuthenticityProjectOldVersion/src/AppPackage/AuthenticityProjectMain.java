@@ -1,11 +1,12 @@
 package AppPackage;
 
-import Pteid_Digests_Package.Pteid_Address;
+import CertificateUtils.CRLVerifier;
+import CertificateUtils.CertificateUtil;
+import CertificateUtils.CertificateVerifier;
 import java.io.IOException;
-import javax.security.cert.X509Certificate;
-import pt.gov.cartaodecidadao.PTEID_ByteArray;
-import pteidlib.PTEID_ADDR;
+import java.security.cert.X509Certificate;
 
+import pteidlib.PTEID_ADDR;
 import pteidlib.PTEID_Certif;
 import pteidlib.PTEID_ID;
 import pteidlib.PTEID_PIC;
@@ -14,7 +15,11 @@ import pteidlib.pteid;
 
 import Pteid_Digests_Package.Pteid_Person;
 import Pteid_Digests_Package.Pteid_Pic;
-import pteidlib.PTEID_RSAPublicKey;
+import Pteid_Digests_Package.Pteid_Address;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import release.ubi.pt.ReleaseUtils;
 
 /**
@@ -58,7 +63,7 @@ public class AuthenticityProjectMain {
                 System.out.println("\nCertificado " + i + ":" + "\nDN do Certificado: " + x509.getSubjectDN() + "\nDN do Emissor" + x509.getIssuerDN() + "\nValido até: " + x509.getNotAfter());
                 helperFile.saveCerts(x509);
             }
-             */
+             
 
             //DIGESTS FROM CARD ID AND PUBLIK KEY
             byte[] keyDigest = null;
@@ -83,7 +88,7 @@ public class AuthenticityProjectMain {
                 address.parse_address(addressData);
 
             }
-            /*
+            
             //DIGEST FROM CARD PICTURE
             PTEID_PIC picData = pteid.GetPic();
             if (picData != null) {
@@ -91,6 +96,29 @@ public class AuthenticityProjectMain {
                 pic.parse(picData);
             }
              */
+            CertificateUtil certUtil = new CertificateUtil();
+            String testCert = "C:\\Users\\João Saraiva\\Documents\\GitHub\\ProjetoFinal\\AuthenticityProjectOldVersion\\testFiles\\CartaoCidadao001.cer";
+            String intermediateCert = "C:\\Users\\João Saraiva\\Documents\\GitHub\\ProjetoFinal\\AuthenticityProjectOldVersion\\testFiles\\ECRaizEstado.cer";
+            String rootCert = "C:\\Users\\João Saraiva\\Documents\\GitHub\\ProjetoFinal\\AuthenticityProjectOldVersion\\testFiles\\MULTICERTRootCertificationAuthority01.cer";
+            
+            X509Certificate x509TestCert = certUtil.getCertificateFromFile(testCert);
+            X509Certificate x509Intermediate = certUtil.getCertificateFromFile(intermediateCert);
+            X509Certificate x509Root = certUtil.getCertificateFromFile(rootCert);
+            
+            
+            Set <X509Certificate> CertificateSet = new HashSet <X509Certificate>(); 
+            CertificateSet.add(x509Root);
+            CertificateSet.add(x509Intermediate);
+            
+            List <String> CRLPoints = CRLVerifier.getCrlDistributionPoints(x509TestCert);
+            //System.out.println(CRLPoints.toString());
+            //CertificateVerifier.verifyCertificate(x509TestCert, CertificateSet);
+            
+            
+            
+            
+            
+            
 
         } catch (PteidException ex) {
             ex.printStackTrace();
