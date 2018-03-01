@@ -38,9 +38,6 @@ public class ReleasePteid_Pic {
     public byte[] getDigest() {
         return digest;
     }
-
-    public ReleasePteid_Pic() {
-    }
     
     private byte[] cbeff=null;   
     private byte[] facialrechdr=null;
@@ -139,7 +136,7 @@ public class ReleasePteid_Pic {
                 sha1.update(imageinfo);
                 sha1.update(picture);
                 digest = sha1.digest();
-                //System.out.println("PIC (13997) length+"+"--"+"\nHash:" + ReleaseUtils.bytesToHex(digest));
+                System.out.println("PIC (13997) length+"+"--"+"\nHash:" + ReleaseUtils.bytesToHex(digest));
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ReleasePteid_Pic.class.getName()).log(Level.SEVERE, null, ex);
             }

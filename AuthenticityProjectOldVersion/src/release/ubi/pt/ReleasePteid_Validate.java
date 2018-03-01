@@ -4,6 +4,9 @@
  */
 package release.ubi.pt;
 
+import Pteid_Digests_Package.Pteid_Address;
+import Pteid_Digests_Package.Pteid_Person;
+import Pteid_Digests_Package.Pteid_Pic;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,12 +20,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.smartcardio.CardException;
+import pteidlib.PteidException;
 import sun.security.pkcs.*;
 import sun.security.util.DerValue;
 import sun.security.x509.AlgorithmId;
 //import org.bouncycastle.asn1.ASN1InputStream;
 //import org.bouncycastle.asn1.ASN1Object;
 //import org.bouncycastle.asn1.util.ASN1Dump;
+
+import pteidlib.pteid;
 
 /**
  *
@@ -32,6 +38,9 @@ public  class ReleasePteid_Validate {
 
     private byte[][] sodHashes = null;
     private X509Certificate documentCertificate = null;
+
+    public ReleasePteid_Validate() {
+    }
 
     public X509Certificate getDocumentCertificate() {
         return documentCertificate;
@@ -77,9 +86,10 @@ public  class ReleasePteid_Validate {
 
     final static boolean debugMode = false;
 
-    public void refresh(ReleasePteid mware) throws CardException, IOException {
+    public void refresh() throws CardException, IOException, PteidException {
 
-        byte[] sod = mware.readSod();
+        
+        byte[] sod = pteid.ReadSOD();
 
         int k = 4;
 
@@ -215,7 +225,7 @@ public  class ReleasePteid_Validate {
 
 
 
-    public boolean check(ReleasePteid_Person obj) throws CardException, IOException {
+    public boolean check(Pteid_Person obj) throws CardException, IOException {
         if ( Arrays.equals( sodHashes[0], obj.getDigest() ) )
         { 
             return true;
@@ -223,7 +233,7 @@ public  class ReleasePteid_Validate {
         return false;
     }
 
-    public boolean check(ReleasePteid_Address obj) {
+    public boolean check(Pteid_Address obj) {
          if ( Arrays.equals( sodHashes[1], obj.getDigest() ) )
         { 
             return true;
@@ -231,7 +241,7 @@ public  class ReleasePteid_Validate {
         return false;
     }
 
-    public boolean check(ReleasePteid_Pic obj)  {       
+    public boolean check(Pteid_Pic obj)  {       
         if ( Arrays.equals( sodHashes[2], obj.getDigest() ) )
         { 
             return true;
@@ -239,7 +249,7 @@ public  class ReleasePteid_Validate {
         return false;
     }
 
-    public boolean checkPk_Icc_Aut(ReleasePteid_Person obj)  {
+    public boolean checkPk_Icc_Aut(Pteid_Person obj)  {
         if ( Arrays.equals( sodHashes[3], obj.getDigestPK_ICC_AUT() ) )
         {
             return true;

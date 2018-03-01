@@ -92,9 +92,6 @@ public class ReleasePteid_Address {
         return digest;
     }
 
-    public ReleasePteid_Address() {
-    }
-
     public void parse(byte[] data) throws IOException {
         if (data == null || data.length < 1146) {
             return;

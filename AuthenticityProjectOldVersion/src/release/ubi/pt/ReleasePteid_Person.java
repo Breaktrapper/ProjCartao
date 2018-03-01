@@ -45,10 +45,12 @@ public class ReleasePteid_Person {
     private String IndicacoesEventuais;
     private String ID_CC_Tras;
     
-    private byte[] PK_ICC_AUT;
+    
     private String PICEB;
     
+    private byte[] PK_ICC_AUT;
     private byte[] digest;
+    
     private byte[] digestPK_ICC_AUT;
 
     public byte[] getDigestPK_ICC_AUT() {
@@ -176,9 +178,6 @@ public class ReleasePteid_Person {
     }
 
     
-    public ReleasePteid_Person() {
-    }
-    
     public void parse(byte[] data) throws IOException {
         if (data == null || data.length < 1536) {
             return;
@@ -262,7 +261,7 @@ public class ReleasePteid_Person {
         try {
             sha1 = MessageDigest.getInstance(hashAlgorithm);
             digest = sha1.digest(dataSodCheck);
-            //System.out.println("ID (1372) length+" + dataSodCheck.length + "\nHash:" + ReleaseUtils.bytesToHex(digest));
+            System.out.println("ID (1372) length+" + dataSodCheck.length + "\nHash:" + ReleaseUtils.bytesToHex(digest));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(ReleasePteid_Address.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,0 +1,10 @@
+Obter CRL's e OCSP
+----------------------------------------------
+Obter Certificado Publico do cartão e validar (assinatura)
+----------------------------------------------
+Obter hashes:
+	- 4 (ID, ADDRESS, PICTURE, Public Key)
+	- Calcular hash deste bloco de 4 hashes..
+	- Comparar com a outra hash 256
+----------------------------------------------
+Obter assinatura digital e comparar com a assinatura do certificado (RSA)
