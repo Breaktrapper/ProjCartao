@@ -67,9 +67,9 @@ public class Pteid_Pic {
         int lenOffset = 1583 - 1536;  //47              
 
         //search for the end of codestream "FF D9"
-        /*
+        
         boolean found = false;
-        int i = pic.picture.length - 1; //data = pic.picture?????
+        int i = data.length - 1; //data = pic.picture?????
         while (!found && i > 0) {
             i--;
             if (((byte) (pic.picture[i] & 0xff) == (byte) 0xFF)) {
@@ -84,7 +84,7 @@ public class Pteid_Pic {
         this.picture = new byte[i - lenOffset - start];
         System.arraycopy(pic.picture, start + lenOffset, this.picture, 0, i - lenOffset - start);
         // System.out.println("picture:" + ReleaseUtils.bytesToHex(picture));
-        */
+        
         setDigest();
     }
 
@@ -102,7 +102,7 @@ public class Pteid_Pic {
             sha1.update(facialrechdr);
             sha1.update(facialinfo);
             sha1.update(imageinfo);
-            ///sha1.update(picture);
+            sha1.update(picture);
             digest = sha1.digest();
             System.out.println("PIC (13997) length+" + "--" + "\nHash: " + ReleaseUtils.bytesToHex(digest));
         } catch (NoSuchAlgorithmException ex) {

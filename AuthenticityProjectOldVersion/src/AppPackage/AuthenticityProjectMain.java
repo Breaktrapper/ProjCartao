@@ -21,6 +21,7 @@ import java.security.cert.PKIXCertPathBuilderResult;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import pteidlib.PTEID_RSAPublicKey;
 
 import release.ubi.pt.ReleaseUtils;
 
@@ -72,7 +73,7 @@ public class AuthenticityProjectMain {
             }
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------- //
             //------------------------------------------------ Hashes from citizen card informations  --------------------------------------------------------- //
-
+            */
             //DIGESTS FROM CARD ID AND PUBLIC KEY
             byte[] keyDigest = null;
 
@@ -127,7 +128,7 @@ public class AuthenticityProjectMain {
             //-------------------------------------- Certification Chain ------------------------------------------------------------ //
             //Usefull website: http://www.nakov.com/blog/2009/12/01/x509-certificate-validation-in-java-build-and-verify-chain-and-verify-clr-with-bouncy-castle/
             //
-            */
+            
             //New CertificateUtil constructor
             CertificateUtil certUtil = new CertificateUtil();
             

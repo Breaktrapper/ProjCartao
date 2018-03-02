@@ -1,10 +1,26 @@
-Obter CRL's e OCSP 
-----------------------------------------------
-Obter Certificado Publico do cartão e validar (assinatura)
-----------------------------------------------
-Obter hashes:
-	- 4 (ID, ADDRESS, PICTURE, Public Key)
-	- Calcular hash deste bloco de 4 hashes..
-	- Comparar com a outra hash 256
-----------------------------------------------
-Obter assinatura digital e comparar com a assinatura do certificado (RSA)
+NOTAS: 
+--------------
+
+HASHES..
+	- Calcular 4 hashes
+	- Calcular hash do bloco das 4
+	- Comparar com a outra hash (do ficheiro SOD) ----> USANDO O FICHEIRO DO PROFESSOR
+	................................
+
+	- Obter assinatura
+	- Calcular hash do bloco assinado
+	- Comparar hashes
+
+CRL's e certification chains..
+
+	- Adicionar cada certificado à keystore
+	- Obter a certification chain
+	
+	- Obter os CRL distribution points
+
+OCSP..
+	- Ler mais sobre o OCSP https://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol
+	- Usar certificado teste e usar o OCSP URL desse certificado
+	- Usar root certificate da mesma chain
+	- Verificar
+	
