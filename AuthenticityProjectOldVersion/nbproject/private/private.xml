@@ -4,9 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/CertificateUtils/CertificateUtil.java</file>
-            <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/CertificateUtils/CertificateVerificationResult.java</file>
+            <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/CertificateUtils/CRLVerifier.java</file>
+            <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/Pteid_Digests_Package/Pteid_Person.java</file>
             <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/AppPackage/AuthenticityProjectMain.java</file>
-            <file>file:/C:/Users/João%20Saraiva/Documents/GitHub/ProjetoFinal/AuthenticityProjectOldVersion/src/CertificateUtils/CertificateVerifier.java</file>
         </group>
     </open-files>
 </project-private>

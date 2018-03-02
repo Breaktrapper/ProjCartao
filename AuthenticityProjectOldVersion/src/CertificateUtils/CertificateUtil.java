@@ -64,7 +64,8 @@ public class CertificateUtil {
     }
 
     //Get OCSP from the given X509Certificate
-    //Usefull website: https://svn.cesecore.eu/svn/ejbca/tags/Rel_3_1_4/ejbca/doc/samples/ValidateCertUseOCSP.java <------------
+    //Usefull websites: https://svn.cesecore.eu/svn/ejbca/tags/Rel_3_1_4/ejbca/doc/samples/ValidateCertUseOCSP.java <------------
+    //https://www.digicert.com/util/utility-test-ocsp-and-crl-access-from-a-server.htm <------------------
     public void OCSP(String RootCACert, String OCSPServerCert, String cert) {
         try {
             CertPath cp = null;

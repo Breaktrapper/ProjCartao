@@ -1,4 +1,4 @@
-Obter CRL's e OCSP
+Obter CRL's e OCSP 
 ----------------------------------------------
 Obter Certificado Publico do cartão e validar (assinatura)
 ----------------------------------------------
