@@ -144,7 +144,7 @@ public class Pteid_Person {
         try {
             sha1 = MessageDigest.getInstance(hashAlgorithm);
             digest = sha1.digest(dataSodCheck);
-            System.out.println("ID (1372) length+" + dataSodCheck.length + "\nHash: " + ReleaseUtils.bytesToHex(digest));
+            System.out.println("PERSON Hash: "+ ReleaseUtils.bytesToHex(digest));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(Pteid_Person.class.getName()).log(Level.SEVERE, null, ex);
         }

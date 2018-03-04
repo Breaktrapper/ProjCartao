@@ -141,7 +141,7 @@ public class Pteid_Address {
         try {
             sha1 = MessageDigest.getInstance(hashAlgorithm);
             digest = sha1.digest(dataSodCheck);
-            System.out.println("Morada (1146) length+" + dataSodCheck.length + "\nHash: " + ReleaseUtils.bytesToHex(digest));
+            System.out.println("ADDRESS Hash: " + ReleaseUtils.bytesToHex(digest));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(Pteid_Address.class.getName()).log(Level.SEVERE, null, ex);
         }
