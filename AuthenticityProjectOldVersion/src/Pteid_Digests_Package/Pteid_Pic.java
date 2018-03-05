@@ -5,6 +5,8 @@
  */
 package Pteid_Digests_Package;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -31,11 +33,47 @@ public class Pteid_Pic {
         return digest;
     }
 
+    public byte[] dataArray;
+
+    public byte[] getDataArray() {
+        return dataArray;
+    }
+
     public Pteid_Pic() {
     }
 
-    public void setDigest(byte[] digest) {
-        this.digest = digest;
+    public void parse_Pic(PTEID_PIC pic) throws IOException {
+
+        if (pic == null) {
+            System.out.println("Objeto vazio..");
+            return;
+        }
+        this.cbeff = pic.cbeff;
+        this.facialinfo = pic.facialinfo;
+        this.facialrechdr = pic.facialrechdr;
+        this.imageinfo = pic.imageinfo;
+        this.picture = pic.picture;
+
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        byteOut.write(this.cbeff);
+        byteOut.write(this.facialinfo);
+        byteOut.write(this.facialrechdr);
+        byteOut.write(this.imageinfo);
+        byteOut.write(this.picture);
+
+        this.dataArray = byteOut.toByteArray();
+        setDigest(byteOut.toByteArray());
     }
 
+    public void setDigest(byte dataSodCheck[]) {//Calculate the hash for the picture 
+        String hashAlgorithm = "SHA-256";
+        MessageDigest sha1; // Compute digest
+        try {
+            sha1 = MessageDigest.getInstance(hashAlgorithm);
+            digest = sha1.digest(dataSodCheck);
+            System.out.println("PIC Hash: " + ReleaseUtils.bytesToHex(digest));
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Pteid_Address.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

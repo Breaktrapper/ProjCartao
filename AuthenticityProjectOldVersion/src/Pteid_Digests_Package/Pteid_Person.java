@@ -57,6 +57,13 @@ public class Pteid_Person {
     private byte[] digest;
     private byte[] digestPK_ICC_AUT;
 
+    public byte [] dataArray;
+    
+    
+    public byte[] getDataArray() {
+        return dataArray;
+    }
+    
     public byte[] getDigestPK_ICC_AUT() {
         return digestPK_ICC_AUT;
     }
@@ -121,7 +128,8 @@ public class Pteid_Person {
         byteOut.write(this.Sexo.getBytes());
         byteOut.write(this.TipoDocumento.getBytes());
         byteOut.write(this.VersaoCartao.getBytes());
-
+        
+        this.dataArray = byteOut.toByteArray();
         setDigest(byteOut.toByteArray());
     }
 

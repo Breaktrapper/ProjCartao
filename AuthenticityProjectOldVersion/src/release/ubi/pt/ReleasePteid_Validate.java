@@ -39,6 +39,7 @@ public class ReleasePteid_Validate {
     public byte[][] sodHashes = null;
     public byte [] fourHashDataDigest = null;
     public byte [] signature = null;
+    public byte [] fourHashDataDigestSOD = null;
     
     public X509Certificate documentCertificate = null;
     public boolean debugMode = false;
@@ -51,6 +52,11 @@ public class ReleasePteid_Validate {
     public byte[] getFourHashDataDigest() {
         return fourHashDataDigest;
     }
+
+    public byte[] getFourHashDataDigestSOD() {
+        return fourHashDataDigestSOD;
+    }
+    
 
     public byte[] getSignature() {
         return signature;
@@ -144,7 +150,7 @@ public class ReleasePteid_Validate {
             throw new CardException("SOD Verifiy Error");
         }
          */
-        System.out.println("\nTESTE: Passou aqui\n");
+        
 
         documentCertificate = certificates[0];
         
@@ -178,7 +184,7 @@ public class ReleasePteid_Validate {
         PKCS9Attribute[] attributes = authenticatedAttributes.getAttributes();
 
         //pkcs 9 structure extract digest sha256 32 bytes
-        byte[] fourHashDataDigestSOD = (byte[]) attributes[1].getValue();
+        this.fourHashDataDigestSOD = (byte[]) attributes[1].getValue();
         if (debugMode) {
             System.out.println("fourHashDataDigestSOD: " + ReleaseUtils.bytesToHex(fourHashDataDigestSOD));
         }
@@ -244,29 +250,29 @@ public class ReleasePteid_Validate {
 
     }
 
-    public boolean checkPerson(byte [][] personHash, byte[] personDigest) throws CardException, IOException {
-        if (Arrays.equals(personHash[0], personDigest)) {
+    public boolean checkPerson(byte [][] sodHashes, Pteid_Person person) throws CardException, IOException {
+        if (Arrays.equals(sodHashes[0], person.getDigest())) {
             return true;
         }
         return false;
     }
 
-    public boolean checkAddress(byte [][] addressHash, byte[] addressDigest) {
-        if (Arrays.equals(addressHash[1], addressDigest)) {
+    public boolean checkAddress(byte [][] sodHashes, Pteid_Address address) {
+        if (Arrays.equals(sodHashes[1], address.getDigest())) {
             return true;
         }
         return false;
     }
 
-    public boolean checkPic(byte [][] picHash, byte[] picAddress) {
-        if (Arrays.equals(picHash[2], picAddress)) {
+    public boolean checkPic(byte [][] sodHashes, Pteid_Pic pic) {
+        if (Arrays.equals(sodHashes[2], pic.getDigest())) {
             return true;
         }
         return false;
     }
 
-    public boolean checkPk_Icc_Aut(byte [][] keyHash, byte[] pk) {
-        if (Arrays.equals(keyHash[3], pk)) {
+    public boolean checkPk_Icc_Aut(byte [][] sodHashes, Pteid_Person pk) {
+        if (Arrays.equals(sodHashes[3], pk.getDigestPK_ICC_AUT())) {
             return true;
         }
         return false;

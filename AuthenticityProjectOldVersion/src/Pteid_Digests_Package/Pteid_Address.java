@@ -55,6 +55,12 @@ public class Pteid_Address {
 
     private byte[] digest;
 
+    public byte[] dataArray;
+
+    public byte[] getDataArray() {
+        return dataArray;
+    }
+
     public byte[] getDigest() {
         return digest;
     }
@@ -129,6 +135,7 @@ public class Pteid_Address {
         byteOut.write(this.streettype.getBytes());
         byteOut.write(this.streettypeAbbr.getBytes());
 
+        this.dataArray = byteOut.toByteArray();
         setDigest(byteOut.toByteArray());
     }
 
