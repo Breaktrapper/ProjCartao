@@ -7,8 +7,13 @@ package CertificateUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
@@ -22,9 +27,15 @@ import java.security.cert.PKIXCertPathValidatorResult;
 import java.security.cert.PKIXParameters;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Enumeration;
+import java.security.PrivateKey;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.Certificate;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -61,6 +72,88 @@ public class CertificateUtil {
                     + e.getMessage());
         }
         return x509;
+    }
+
+    public static CertificateDetails getCertificateDetails(String jksPath, String jksPassword) {
+
+        CertificateDetails certDetails = null;
+
+        try {
+
+            boolean isAliasWithPrivateKey = false;
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+
+            // Provide location of Java Keystore and password for access
+            keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());
+
+            // iterate over all aliases
+            Enumeration<String> es = keyStore.aliases();
+            String alias = "";
+            while (es.hasMoreElements()) {
+                alias = (String) es.nextElement();
+                // if alias refers to a private key break at that point
+                // as we want to use that certificate
+                if (isAliasWithPrivateKey = keyStore.isKeyEntry(alias)) {
+                    break;
+                }
+            }
+
+            if (isAliasWithPrivateKey) {
+
+                KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
+                        new KeyStore.PasswordProtection(jksPassword.toCharArray()));
+
+                PrivateKey myPrivateKey = pkEntry.getPrivateKey();
+
+                // Load certificate chain
+                Certificate[] chain = keyStore.getCertificateChain(alias);
+
+                certDetails = new CertificateDetails();
+                certDetails.setPrivateKey(myPrivateKey);
+                certDetails.setX509Certificate((X509Certificate) chain[0]);
+
+            }
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        }
+
+        return certDetails;
+    }
+
+    //Get the public key from a x509 certificate to a new file
+    public void getKeyFromCert(String path) throws CertificateException, FileNotFoundException, IOException {
+        X509Certificate x509 = getCertificateFromFile(path);
+        PublicKey pk = x509.getPublicKey();
+        FileOutputStream os = new FileOutputStream("key.key");
+        os.write(pk.getEncoded());
+        os.close();
+    }
+
+    //Prints the certification path from the certificates in a java keystore
+    public void printCertPath(String keystore, String alias, String password) throws FileNotFoundException, KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+        char[] storepass = password.toCharArray();
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(new FileInputStream(keystore), storepass);
+        java.security.cert.Certificate[] cchain = ks.getCertificateChain(alias);
+        List mylist = new ArrayList();
+        for (int i = 0; i < cchain.length; i++) {
+            mylist.add(cchain[i]);
+        }
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        CertPath cp = cf.generateCertPath(mylist);
+        System.out.println(cp);
+
     }
 
     //Get OCSP from the given X509Certificate

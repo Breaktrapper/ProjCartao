@@ -2,4 +2,27 @@ keytool -importcert -file testCert.cer -keystore keystore.jks -alias "Alias" -> 
 
 keytool -list -v -keystore keystore.jks -> lista os certificados da keystore
 
-keytool -genkeypair -storepass 123456 -storetype pkcs12 -alias test -validity 365 -v -keyalg RSA -keystore keystore.p12 -> gera certificado auto assinado
+keytool -genkeypair -storepass 123456 -storetype pkcs12 -alias test -validity 365 -v -keyalg RSA -keystore keystore.p12 -> gera certificado auto assinado para uma keystore pkcs12
+
+cat cert.pem chain.pem fullchain.pem >all.pem 
+
+openssl x509 -inform der -in certificate.cer -out certificate.pem -> converter um certificado .der para .pem
+
+//------------------------------------------------//
+Gerar certification chain de teste
+
+keytool -genkeypair -keystore root.jks -alias root -ext bc:c
+keytool -genkeypair -keystore ca.jks -alias ca -ext bc:c
+keytool -genkeypair -keystore server.jks -alias server
+
+keytool -keystore root.jks -alias root -exportcert -rfc > root.pem
+keytool -storepass <storepass> -keystore ca.jks -certreq -alias ca | keytool -storepass <storepass> -keystore root.jks -gencert -alias root -ext BC=0 -rfc > ca.pem
+
+cat root.pem ca.pem > cachain.pem
+keytool -keystore ca.jks -importcert -alias ca -file cachain.pem
+
+keytool -storepass <storepass> -keystore server.jks -certreq -alias server | keytool -storepass <storepass> -keystore ca.jks -gencert -alias ca -ext ku:c=dig,keyEncipherment -rfc > server.pem
+cat root.pem ca.pem server.pem > serverchain.pem
+keytool -keystore server.jks -importcert -alias server -file serverchain.pem
+
+//-----------------------------------------------//

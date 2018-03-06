@@ -1,0 +1,11 @@
+OCSP - https://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol
+
+CRL'S - https://en.wikipedia.org/wiki/Certificate_revocation_list
+
+PKCS - https://en.wikipedia.org/wiki/PKCS
+
+Read x509 Certificate from Java Keystore - http://www.opencodez.com/java/read-x509-certificate-java-keystore.htm
+
+Create certificate chain with java keytool - https://stackoverflow.com/questions/30634658/how-to-create-a-certificate-chain-using-keytool
+
+Get certificate chain: http://www.java2s.com/Tutorial/Java/0490__Security/JKSkeystoregetcertificatechain.htm

@@ -14,11 +14,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import CertificateUtils.CRLVerifier;
+import CertificateUtils.CertificateDetails;
 import CertificateUtils.CertificateUtil;
 import CertificateUtils.CertificateVerifier;
-
 
 import pteidlib.PTEID_ADDR;
 import pteidlib.PTEID_Certif;
@@ -30,19 +29,20 @@ import pteidlib.pteid;
 import Pteid_Digests_Package.Pteid_Person;
 import Pteid_Digests_Package.Pteid_Pic;
 import Pteid_Digests_Package.Pteid_Address;
-
+import java.net.URI;
+import java.util.Date;
 
 import pteidlib.PTEID_RSAPublicKey;
 import release.ubi.pt.ReleasePteid_Validate;
 import release.ubi.pt.ReleaseUtils;
 
 import sun.security.provider.certpath.OCSP;
+import static sun.security.provider.certpath.OCSP.check;
 
 /**
  * @author João Saraiva - FEITO COM A VERSÃO ANTIGA DO MIDDLEWARE DO GOVERNO
  */
 public class AuthenticityProjectMain {
-
 
     public static byte[] testSignature = null;
 
@@ -62,7 +62,7 @@ public class AuthenticityProjectMain {
             //Inicilize card
             pteid.Init("");
             pteid.SetSODChecking(false);
-            
+
             //------------------------------------------------ SOD File and Digital Certificates from CITIZEN CARD --------------------------------------------------------- //
             /*
             //Get bytes from card for the SOD File
@@ -226,10 +226,8 @@ public class AuthenticityProjectMain {
             } else {
                 System.out.println("Certificate is not valid.");
             }
-            */
-            
+             */
             //-------------------------------------- CRL and certification chain
-            //
             //-------------------------------------- Certification Chain ------------------------------------------------------------ //
             //Usefull website: http://www.nakov.com/blog/2009/12/01/x509-certificate-validation-in-java-build-and-verify-chain-and-verify-clr-with-bouncy-castle/
             //
@@ -241,12 +239,11 @@ public class AuthenticityProjectMain {
             String rootCert = "C:\\Users\\João Saraiva\\Documents\\GitHub\\ProjetoFinal\\AuthenticityProjectOldVersion\\Certificates\\RootCertificates\\RootCert.cer";
 
             String testCert_CC = "C:\\Users\\João Saraiva\\Documents\\GitHub\\ProjetoFinal\\AuthenticityProjectOldVersion\\Certificates\\TestCertificate\\TestCertCC.cer";
-            
+
             //Get the certificates from the files
             X509Certificate x509TestCert = certUtil.getCertificateFromFile(testCert);
             X509Certificate x509Root = certUtil.getCertificateFromFile(rootCert);
             X509Certificate x509TestCert_CC = certUtil.getCertificateFromFile(testCert_CC);
-            
 
             //Create a new set of X509Certificate objects
             Set<X509Certificate> CertificateSet = new HashSet<X509Certificate>();
@@ -255,24 +252,36 @@ public class AuthenticityProjectMain {
             CertificateSet.add(x509TestCert);
             CertificateSet.add(x509Root);
 
+            //VERY USEFULL ---> generate test certification chain with keytool
+            //https://stackoverflow.com/questions/30634658/how-to-create-a-certificate-chain-using-keytool
+            String keystore = "C:\\Users\\João Saraiva\\Desktop\\chain\\server.jks";
+            String alias = "server"; //Note: If the alias string is incorrect, the method will give a NullPointerException
+            String password = "123456";
+
+            //Print certification path/chain
+            //certUtil.printCertPath(keystore, alias, password);
+
+            CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\Users\\João Saraiva\\Desktop\\chain\\server.jks", "123456");
+            System.out.println("Private key from certificate from keystore, in hexadecimal: " + ReleaseUtils.bytesToHex(certDetails.getPrivateKey().getEncoded()));
+            System.out.println("X509 Certificate from keystore: " +certDetails.getX509Certificate());
+
+
             //Build the certification chain for the given test certificate and the trusted root CA certificates and also the intermediate certificates
             //Verify the chain
             //PKIXCertPathBuilderResult chain = CertificateVerifier.verifyCertificate(x509TestCert, CertificateSet);
             //CertPath certPath = chain.getCertPath();
             //System.out.println("Certificate path: " + certPath); //PROBLEM: Can't verify the test certificate using the trusted root CA certificates and intermediate certificates
-
             //----------------------------------- CRL Distribution Point URL's -------------------------------------------------//
             //Extracts all CRL distribution point URLs from the certificate
             //List<String> CRLPoints = CRLVerifier.getCrlDistributionPoints(x509TestCert);
             //System.out.println(CRLPoints.toString());
-            
             //----------------------------------- OCSP testing -------------------------------------------------------------------------//
-            OCSP.RevocationStatus check = OCSP.check(x509TestCert, x509Root);
-            OCSP.RevocationStatus.CertStatus certStatus = check.getCertStatus();
-            certStatus.toString();
-            
-            
-
+            //URI uri = OCSP.getResponderURI(x509Root);
+            //Date date = x509TestCert_CC.getNotAfter();
+            //OCSP.RevocationStatus check = OCSP.check(x509TestCert_CC, x509Root, uri, x509TestCert, date );
+            //OCSP.RevocationStatus check = OCSP.check(x509TestCert, x509Root);
+            //OCSP.RevocationStatus.CertStatus certStatus = check.getCertStatus();
+            //certStatus.toString();
         } catch (PteidException ex) {
             ex.printStackTrace();
             System.out.println(ex.getMessage());
